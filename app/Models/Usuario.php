@@ -49,5 +49,10 @@ class Usuario extends Authenticatable
         return $this->belongsTo(Estado::class,'estado_id','id');
     }
 
+    public function getNameAttribute(): string
+    {
+        return $this->nombres ?? 'Sin Nombre';
+    }
+
 
 }
