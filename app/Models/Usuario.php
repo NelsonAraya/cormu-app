@@ -46,7 +46,7 @@ class Usuario extends Authenticatable
         return $this->belongsTo(EstadoCivil::class,'e_civil_id','id');
     }
     public function estado(){
-        return $this->belongsTo(Estado::class,'estado_id','id');
+        return $this->belongsTo(EstadoUsuario::class,'estado_id','id');
     }
 
     public function ordenesTrabajos(){
