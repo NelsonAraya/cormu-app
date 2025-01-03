@@ -22,7 +22,7 @@ class UsuarioResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
-    {
+    {       
         return $form
             ->schema([
 
@@ -30,10 +30,31 @@ class UsuarioResource extends Resource
                 ->description('Informacion para el ingreso de Usuario')
                 ->columns(3)
                 ->schema([
+                    Forms\Components\TextInput::make('id')
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            // Verificar si el formato contiene un guion para separar RUT y DV
+                            if (strpos($state, '-') !== false) {
+                                $parts = explode('-', $state);
+                                $rutSinDv = $parts[0];
+                                $dv = $parts[1];
+        
+                                // Actualizar el campo 'id' con el RUT sin DV
+                                $set('id', $rutSinDv);
+        
+                                // Actualizar el campo 'dv' con el DV
+                                $set('dv', $dv);
+                            } else {
+                                // Si no tiene guion, limpiar el campo 'dv'
+                                $set('dv', null);
+                            }
+                        }),
                     Forms\Components\TextInput::make('dv')
-                    ->required(),
+                        ->disabled(),
                     Forms\Components\TextInput::make('password')
                         ->password()
+                        ->hiddenOn('edit')
                         ->required(),
                     Forms\Components\TextInput::make('nombres')
                         ->required(),
