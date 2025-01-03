@@ -49,9 +49,15 @@ class Usuario extends Authenticatable
         return $this->belongsTo(Estado::class,'estado_id','id');
     }
 
+    public function ordenesTrabajos(){
+        return $this->belongsToMany(OrdenTrabajo::class)->withTimestamps();
+    }
+
     public function getNameAttribute(): string
     {
-        return $this->nombres ?? 'Sin Nombre';
+        $this->nombres=explode(' ',$this->nombres)[0];
+
+        return ucwords($this->nombres.' '.$this->apellidop);
     }
 
 
