@@ -33,29 +33,28 @@ class UsuarioResource extends Resource
                     Forms\Components\TextInput::make('id')
                         ->required()
                         ->reactive()
+                        ->disabled(fn ($context) => $context === 'edit') // Bloquear solo en edición
                         ->afterStateUpdated(function ($state, callable $set) {
-                            // Verificar si el formato contiene un guion para separar RUT y DV
+                            // Verificar si el formato contiene un guion y un DV válido
                             if (strpos($state, '-') !== false) {
                                 $parts = explode('-', $state);
-                                $rutSinDv = $parts[0];
-                                $dv = $parts[1];
-        
-                                // Actualizar el campo 'id' con el RUT sin DV
-                                $set('id', $rutSinDv);
-        
-                                // Actualizar el campo 'dv' con el DV
-                                $set('dv', $dv);
+                    
+                                // Validar que hay exactamente dos partes y que el DV no está vacío
+                                if (count($parts) === 2 && !empty($parts[1])) {
+                                    $rutSinDv = $parts[0];
+                                    $dv = $parts[1];
+                    
+                                    // Actualizar los campos solo si hay un DV válido
+                                    $set('id', $rutSinDv);
+                                    $set('dv', $dv);
+                                }
                             } else {
-                                // Si no tiene guion, limpiar el campo 'dv'
+                                // Si no tiene guion o DV, limpiar el campo 'dv'
                                 $set('dv', null);
                             }
                         }),
                     Forms\Components\TextInput::make('dv')
                         ->disabled(),
-                    Forms\Components\TextInput::make('password')
-                        ->password()
-                        ->hiddenOn('edit')
-                        ->required(),
                     Forms\Components\TextInput::make('nombres')
                         ->required(),
                     Forms\Components\TextInput::make('apellidop')
