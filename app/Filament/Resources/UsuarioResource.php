@@ -54,7 +54,7 @@ class UsuarioResource extends Resource
                             }
                         }),
                     Forms\Components\TextInput::make('dv')
-                        ->disabled(),
+                        ->readonly(),
                     Forms\Components\TextInput::make('nombres')
                         ->required(),
                     Forms\Components\TextInput::make('apellidop')
